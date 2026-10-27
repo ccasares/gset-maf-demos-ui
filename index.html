@@ -564,6 +564,16 @@
 
     .toggle-visibility:hover { background: var(--gray-200); }
 
+    .copy-btn {
+      flex-shrink: 0; background: var(--gray-100);
+      border: 1.5px solid var(--gray-200); border-radius: 8px;
+      padding: 0 10px; cursor: pointer; color: var(--gray-600);
+      transition: background 0.15s, color 0.15s; display: flex; align-items: center;
+    }
+
+    .copy-btn:hover { background: var(--ms-blue-pale); border-color: var(--ms-blue); color: var(--ms-blue-dark); }
+    .copy-btn.copied { background: #f0fdf4; border-color: #bbf7d0; color: #16a34a; }
+
     .form-hint { font-size: 0.75rem; color: var(--gray-400); margin-top: 5px; }
 
     .config-modal-footer {
@@ -791,9 +801,11 @@
       id: 'agent-kill-switch',
       title: 'Agent Kill Switch',
       description: 'Demonstrates how the Agent Network Gateway filters dangerous messages: PII data exfiltration, privilege escalation, and jailbreak attacks.',
-      lsKeys: { url: 'ms_aks_api_url', token: 'ms_aks_token' },
-      defaultConfig: { url: 'https://agent-network-gw-v4o641.rajrd4-1.usa-e1.cloudhub.io/model-proxy-demo/chat/completions', token: '' },
+      lsKeys: { anypoint_username: 'ms_anypoint_org_username', anypoint_password: 'ms_anypoint_org_password', url: 'ms_aks_api_url', token: 'ms_aks_token' },
+      defaultConfig: { anypoint_username: '', anypoint_password: '', url: 'https://agent-network-gw-v4o641.rajrd4-1.usa-e1.cloudhub.io/model-proxy-demo/chat/completions', token: '' },
       configFields: [
+        { key: 'anypoint_username', label: 'Anypoint Org Username', type: 'text',     hint: '', placeholder: 'Enter your Anypoint username', copyable: true },
+        { key: 'anypoint_password', label: 'Anypoint Org Password', type: 'password', hint: '', placeholder: 'Enter your Anypoint password', toggleable: true, copyable: true },
         { key: 'url',   label: 'Endpoint URL', type: 'url',      hint: 'Endpoint to which messages will be sent (POST method).',    placeholder: 'https://...' },
         { key: 'token', label: 'Bearer Token', type: 'password', hint: 'Included as Authorization: Bearer <token> header.',           placeholder: 'Enter your access token', toggleable: true }
       ],
@@ -837,9 +849,11 @@
       id: 'semantic-routing',
       title: 'Semantic Routing',
       description: 'Shows how the Agent Network Gateway automatically routes each message to the most suitable AI model based on the semantic content of the request.',
-      lsKeys: { url: 'ms_sr_api_url', client_id: 'ms_sr_client_id', client_secret: 'ms_sr_client_secret' },
-      defaultConfig: { url: '', client_id: '', client_secret: '' },
+      lsKeys: { anypoint_username: 'ms_anypoint_org_username', anypoint_password: 'ms_anypoint_org_password', url: 'ms_sr_api_url', client_id: 'ms_sr_client_id', client_secret: 'ms_sr_client_secret' },
+      defaultConfig: { anypoint_username: '', anypoint_password: '', url: '', client_id: '', client_secret: '' },
       configFields: [
+        { key: 'anypoint_username', label: 'Anypoint Org Username', type: 'text',     hint: '', placeholder: 'Enter your Anypoint username', copyable: true },
+        { key: 'anypoint_password', label: 'Anypoint Org Password', type: 'password', hint: '', placeholder: 'Enter your Anypoint password', toggleable: true, copyable: true },
         { key: 'url',           label: 'Endpoint URL', type: 'url',      hint: 'Base URL. /chat/completions will be appended automatically.',  placeholder: 'https://...' },
         { key: 'client_id',     label: 'Client ID',    type: 'text',     hint: 'Included as client_id header.',                                placeholder: 'Enter the Client ID' },
         { key: 'client_secret', label: 'Client Secret', type: 'password', hint: 'Included as client_secret header.',                           placeholder: 'Enter the Client Secret', toggleable: true }
@@ -914,12 +928,16 @@
       id: 'model-wallets',
       title: 'Model Wallets',
       description: 'Demonstrates AI model wallet management: dynamic provider and model selection with quota and cost control per user or group.',
-      lsKeys: { url: 'ms_mw_api_url', token: 'ms_mw_token' },
+      lsKeys: { anypoint_username: 'ms_anypoint_org_username', anypoint_password: 'ms_anypoint_org_password', url: 'ms_mw_api_url', token: 'ms_mw_token' },
       defaultConfig: {
+        anypoint_username: '',
+        anypoint_password: '',
         url: '',
         token: 'eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2V4YW1wbGVpZHAuY29tIiwic3ViIjoianNlcnJhbm9AZXhhbXBsZS5jb20iLCJuYW1lIjoiSmFzb24gU2VycmFubyIsImlhdCI6MTc4ODg4NjY0OSwiZXhwIjoxOTg4ODkwMjQ5LCJncm91cHMiOlsiZGV2ZWxvcG1lbnQiXX0.VRIFl2DsEFfoQkfQB5Lod2DG4uc5PHH_H4Cc-0LpdzU'
       },
       configFields: [
+        { key: 'anypoint_username', label: 'Anypoint Org Username', type: 'text',     hint: '', placeholder: 'Enter your Anypoint username', copyable: true },
+        { key: 'anypoint_password', label: 'Anypoint Org Password', type: 'password', hint: '', placeholder: 'Enter your Anypoint password', toggleable: true, copyable: true },
         { key: 'url',   label: 'Endpoint URL', type: 'url',      hint: 'Endpoint to which messages will be sent (POST method).',    placeholder: 'https://...' },
         { key: 'token', label: 'Bearer Token', type: 'password', hint: 'Included as Authorization: Bearer <token> header.',           placeholder: 'Enter your access token', toggleable: true }
       ],
@@ -1076,6 +1094,9 @@
       : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
   }
 
+  const clipboardSVG = () => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+  const checkSVG    = () => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
   function openConfigModal(demoId) {
     configTargetDemoId = demoId;
     const demo = DEMOS[demoId];
@@ -1102,22 +1123,48 @@
       input.spellcheck  = false;
       input.addEventListener('keydown', e => { if (e.key === 'Enter') saveConfig(); });
 
-      if (field.toggleable) {
-        fieldVisible[field.key] = false;
+      if (field.toggleable || field.copyable) {
         const wrap = document.createElement('div');
         wrap.className = 'input-with-action';
-        const btn = document.createElement('button');
-        btn.className = 'toggle-visibility';
-        btn.type = 'button';
-        btn.setAttribute('aria-label', 'Show/hide');
-        btn.innerHTML = eyeSVG(false);
-        btn.addEventListener('click', () => {
-          fieldVisible[field.key] = !fieldVisible[field.key];
-          input.type = fieldVisible[field.key] ? 'text' : 'password';
-          btn.innerHTML = eyeSVG(fieldVisible[field.key]);
-        });
         wrap.appendChild(input);
-        wrap.appendChild(btn);
+
+        if (field.copyable) {
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'copy-btn';
+          copyBtn.type = 'button';
+          copyBtn.setAttribute('aria-label', 'Copy to clipboard');
+          copyBtn.innerHTML = clipboardSVG();
+          copyBtn.addEventListener('click', async () => {
+            const val = input.value;
+            if (!val) return;
+            try {
+              await navigator.clipboard.writeText(val);
+            } catch (_) {
+              input.select();
+              document.execCommand('copy');
+            }
+            copyBtn.classList.add('copied');
+            copyBtn.innerHTML = checkSVG();
+            setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.innerHTML = clipboardSVG(); }, 1500);
+          });
+          wrap.appendChild(copyBtn);
+        }
+
+        if (field.toggleable) {
+          fieldVisible[field.key] = false;
+          const toggleBtn = document.createElement('button');
+          toggleBtn.className = 'toggle-visibility';
+          toggleBtn.type = 'button';
+          toggleBtn.setAttribute('aria-label', 'Show/hide');
+          toggleBtn.innerHTML = eyeSVG(false);
+          toggleBtn.addEventListener('click', () => {
+            fieldVisible[field.key] = !fieldVisible[field.key];
+            input.type = fieldVisible[field.key] ? 'text' : 'password';
+            toggleBtn.innerHTML = eyeSVG(fieldVisible[field.key]);
+          });
+          wrap.appendChild(toggleBtn);
+        }
+
         group.appendChild(wrap);
       } else {
         group.appendChild(input);
