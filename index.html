@@ -1035,20 +1035,37 @@
       ],
       sendRequest: async function(messages, model, config) {
         const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
-        const res = await fetch(config.url, {
+        const url = config.url.replace(/\/$/, '');
+        const body = {
+          type: 'REQUEST',
+          url,
+          payload: {
+            jsonrpc: '2.0',
+            id: crypto.randomUUID(),
+            method: 'SendMessage',
+            params: {
+              message: {
+                role: 'ROLE_USER',
+                parts: [{ text: lastUserMsg?.content ?? '' }],
+                messageId: crypto.randomUUID()
+              },
+              metadata: {}
+            }
+          }
+        };
+        const res = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'client_id':     config.client_id     || '',
             'client_secret': config.client_secret || ''
           },
-          body: JSON.stringify({
-            messages: [{ role: 'user', content: lastUserMsg?.content ?? '' }]
-          })
+          body: JSON.stringify(body)
         });
         if (res.ok) {
           const data = await res.json();
-          return { ok: true, text: data?.choices?.[0]?.message?.content ?? '(empty response)' };
+          const text = data?.payload?.result?.task?.status?.message?.parts?.[0]?.text ?? '(empty response)';
+          return { ok: true, text };
         } else if (res.status === 403) {
           let msg = 'Access denied (403)';
           try { const d = await res.json(); msg = d?.error?.message ?? msg; } catch {}
