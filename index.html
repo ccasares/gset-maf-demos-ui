@@ -458,6 +458,10 @@
       display: flex; align-items: center; gap: 10px;
     }
 
+    .demos-modal-header-actions {
+      display: flex; align-items: center; gap: 8px;
+    }
+
     .modal-close {
       background: rgba(255,255,255,0.1); border: none; color: white;
       width: 30px; height: 30px; border-radius: 6px; cursor: pointer;
@@ -466,6 +470,15 @@
     }
 
     .modal-close:hover { background: rgba(255,255,255,0.22); }
+
+    .modal-action-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25);
+      color: white; height: 30px; padding: 0 10px; border-radius: 6px; cursor: pointer;
+      font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 5px;
+      transition: background 0.15s;
+    }
+
+    .modal-action-btn:hover { background: rgba(255,255,255,0.22); }
 
     .demos-modal-body { padding: 24px; overflow-y: auto; flex: 1; }
 
@@ -663,7 +676,21 @@
         </svg>
         Available Demos
       </h2>
-      <button class="modal-close" id="demos-modal-close" aria-label="Close">&times;</button>
+      <div class="demos-modal-header-actions">
+        <button class="modal-action-btn" id="demos-export-btn" aria-label="Export configuration">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Export
+        </button>
+        <button class="modal-action-btn" id="demos-import-btn" aria-label="Import configuration">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          Import
+        </button>
+        <button class="modal-close" id="demos-modal-close" aria-label="Close">&times;</button>
+      </div>
     </div>
     <div class="demos-modal-body">
       <div class="demos-grid" id="demos-grid"></div>
@@ -1005,6 +1032,36 @@
     });
   }
 
+  /* ─── Export / Import all demo configs ──────────────────────── */
+  function exportDemosConfig() {
+    const data = {};
+    Object.keys(DEMOS).forEach(id => { data[id] = getDemoConfig(id); });
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'maf-demos-config.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importDemosConfig(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        let count = 0;
+        Object.keys(data).forEach(id => {
+          if (DEMOS[id]) { saveDemoConfig(id, data[id]); count++; }
+        });
+        showToast(`Configuration imported for ${count} demo${count !== 1 ? 's' : ''}.`);
+      } catch {
+        showToast('Import failed: invalid file format.');
+      }
+    };
+    reader.readAsText(file);
+  }
+
   /* ─── DOM refs ───────────────────────────────────────────────── */
   const demosOverlay    = document.getElementById('demos-overlay');
   const configOverlay   = document.getElementById('config-overlay');
@@ -1084,6 +1141,19 @@
   document.getElementById('open-demos-cta').addEventListener('click', openDemosModal);
   activeDemoChip.addEventListener('click', openDemosModal);
   demosOverlay.addEventListener('click', e => { if (e.target === demosOverlay) closeDemosModal(); });
+
+  document.getElementById('demos-export-btn').addEventListener('click', exportDemosConfig);
+
+  const importFileInput = document.createElement('input');
+  importFileInput.type   = 'file';
+  importFileInput.accept = '.json,application/json';
+  importFileInput.style.display = 'none';
+  importFileInput.addEventListener('change', () => {
+    if (importFileInput.files[0]) importDemosConfig(importFileInput.files[0]);
+    importFileInput.value = '';
+  });
+  document.body.appendChild(importFileInput);
+  document.getElementById('demos-import-btn').addEventListener('click', () => importFileInput.click());
 
   /* ─── Config overlay ─────────────────────────────────────────── */
   let fieldVisible = {};
