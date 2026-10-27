@@ -1037,20 +1037,16 @@
         const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
         const url = config.url;
         const body = {
-          type: 'REQUEST',
-          url,
-          payload: {
-            jsonrpc: '2.0',
-            id: crypto.randomUUID(),
-            method: 'SendMessage',
-            params: {
-              message: {
-                role: 'ROLE_USER',
-                parts: [{ text: lastUserMsg?.content ?? '' }],
-                messageId: crypto.randomUUID()
-              },
-              metadata: {}
-            }
+          jsonrpc: '2.0',
+          id: crypto.randomUUID(),
+          method: 'SendMessage',
+          params: {
+            message: {
+              role: 'ROLE_USER',
+              parts: [{ text: lastUserMsg?.content ?? '' }],
+              messageId: crypto.randomUUID()
+            },
+            metadata: {}
           }
         };
         const res = await fetch(url, {
