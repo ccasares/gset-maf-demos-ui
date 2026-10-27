@@ -1092,11 +1092,7 @@
       markdownResponse: true,
       showHeadersPanel: false,
       presets: [
-        { label: 'Onboard new hire',         prompt: 'Onboard a new employee: Sarah Johnson, starting next Monday as a Senior Engineer in the Platform team.' },
-        { label: 'Badge access status',      prompt: 'Check the badge access provisioning status for employee ID EMP-4821.' },
-        { label: 'Salesforce profile setup', prompt: 'Set up a Salesforce profile and assign the standard Sales user permissions for the new hire John Miller.' },
-        { label: 'Ping ID enrollment',       prompt: 'Enroll new hire Maria Garcia in Ping ID for multi-factor authentication.' },
-        { label: 'Onboarding ticket',        prompt: 'Create an onboarding Zendesk ticket for new hire David Chen starting in the Finance department.' }
+        { label: 'Onboard Alex Smith', prompt: "Onboard a new sales employee. Their name is 'Alex Smith', email is 'alex.smith@example.com', and phone number is '555-123-4567'" }
       ],
       sendRequest: async function(messages, model, config) {
         const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
