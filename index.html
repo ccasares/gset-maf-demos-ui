@@ -1007,6 +1007,56 @@
           return { ok: false, text: `HTTP error ${res.status}: ${res.statusText}` };
         }
       }
+    },
+
+    'it-help-investigation': {
+      id: 'it-help-investigation',
+      title: 'IT Help Investigation',
+      description: 'Introduces the IT Help Investigation Broker V2, an example agent network to triage, investigate, and resolve support tickets.',
+      lsKeys: { anypoint_username: 'ms_it_anypoint_username', anypoint_password: 'ms_it_anypoint_password', url: 'ms_it_api_url', client_id: 'ms_it_client_id', client_secret: 'ms_it_client_secret' },
+      defaultConfig: { anypoint_username: '', anypoint_password: '', url: '', client_id: '', client_secret: '' },
+      configFields: [
+        { key: 'anypoint_username', label: 'Anypoint Org Username', type: 'text',     hint: '', placeholder: 'Enter your Anypoint username', copyable: true },
+        { key: 'anypoint_password', label: 'Anypoint Org Password', type: 'password', hint: '', placeholder: 'Enter your Anypoint password', toggleable: true, copyable: true },
+        { key: 'url',           label: 'Endpoint URL',  type: 'url',      hint: 'Base URL of the IT Help Investigation broker.',       placeholder: 'https://...' },
+        { key: 'client_id',     label: 'Client ID',     type: 'text',     hint: 'Included as client_id header.',                      placeholder: 'Enter the Client ID' },
+        { key: 'client_secret', label: 'Client Secret', type: 'password', hint: 'Included as client_secret header.',                  placeholder: 'Enter the Client Secret', toggleable: true }
+      ],
+      models: [],
+      showModelSelector: false,
+      markdownResponse: true,
+      showHeadersPanel: false,
+      presets: [
+        { label: 'VPN not working',       prompt: 'The VPN is not working, what can I do?' },
+        { label: 'GitHub Enterprise seats', prompt: 'Check if we have available GitHub Enterprise seats' },
+        { label: 'Provision Figma license', prompt: 'Provision a Figma license for ' },
+        { label: '2FA setup',             prompt: 'How do I set up two-factor authentication?' },
+        { label: 'Email not syncing',     prompt: 'My email is not syncing' }
+      ],
+      sendRequest: async function(messages, model, config) {
+        const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+        const res = await fetch(config.url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'client_id':     config.client_id     || '',
+            'client_secret': config.client_secret || ''
+          },
+          body: JSON.stringify({
+            messages: [{ role: 'user', content: lastUserMsg?.content ?? '' }]
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          return { ok: true, text: data?.choices?.[0]?.message?.content ?? '(empty response)' };
+        } else if (res.status === 403) {
+          let msg = 'Access denied (403)';
+          try { const d = await res.json(); msg = d?.error?.message ?? msg; } catch {}
+          return { ok: false, text: msg };
+        } else {
+          return { ok: false, text: `HTTP error ${res.status}: ${res.statusText}` };
+        }
+      }
     }
   };
 
