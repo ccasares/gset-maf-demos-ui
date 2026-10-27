@@ -1035,7 +1035,7 @@
       ],
       sendRequest: async function(messages, model, config) {
         const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
-        const url = config.url.replace(/\/$/, '');
+        const url = config.url;
         const body = {
           type: 'REQUEST',
           url,
