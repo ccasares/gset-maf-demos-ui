@@ -1065,6 +1065,7 @@
         });
         if (res.ok) {
           const data = await res.json();
+          if (data?.error?.message) return { ok: false, text: data.error.message };
           const text = data?.payload?.result?.task?.status?.message?.parts?.[0]?.text ?? '(empty response)';
           return { ok: true, text };
         } else if (res.status === 403) {
