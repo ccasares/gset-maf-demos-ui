@@ -1072,6 +1072,71 @@
           return { ok: false, text: `HTTP error ${res.status}: ${res.statusText}` };
         }
       }
+    },
+
+    'employee-onboarding': {
+      id: 'employee-onboarding',
+      title: 'Employee Onboarding',
+      description: 'Showcases a multi-agent onboarding broker that automates the full employee onboarding lifecycle by coordinating Workday, Badging, Salesforce, Ping ID (IT), and Zendesk.',
+      lsKeys: { anypoint_username: 'ms_eo_anypoint_username', anypoint_password: 'ms_eo_anypoint_password', url: 'ms_eo_api_url', client_id: 'ms_eo_client_id', client_secret: 'ms_eo_client_secret' },
+      defaultConfig: { anypoint_username: '', anypoint_password: '', url: '', client_id: '', client_secret: '' },
+      configFields: [
+        { key: 'anypoint_username', label: 'Anypoint Org Username', type: 'text',     hint: '', placeholder: 'Enter your Anypoint username', copyable: true },
+        { key: 'anypoint_password', label: 'Anypoint Org Password', type: 'password', hint: '', placeholder: 'Enter your Anypoint password', toggleable: true, copyable: true },
+        { key: 'url',           label: 'Endpoint URL',  type: 'url',      hint: 'Base URL of the Employee Onboarding broker.',          placeholder: 'https://...' },
+        { key: 'client_id',     label: 'Client ID',     type: 'text',     hint: 'Included as client_id header.',                        placeholder: 'Enter the Client ID' },
+        { key: 'client_secret', label: 'Client Secret', type: 'password', hint: 'Included as client_secret header.',                    placeholder: 'Enter the Client Secret', toggleable: true }
+      ],
+      models: [],
+      showModelSelector: false,
+      markdownResponse: true,
+      showHeadersPanel: false,
+      presets: [
+        { label: 'Onboard new hire',         prompt: 'Onboard a new employee: Sarah Johnson, starting next Monday as a Senior Engineer in the Platform team.' },
+        { label: 'Badge access status',      prompt: 'Check the badge access provisioning status for employee ID EMP-4821.' },
+        { label: 'Salesforce profile setup', prompt: 'Set up a Salesforce profile and assign the standard Sales user permissions for the new hire John Miller.' },
+        { label: 'Ping ID enrollment',       prompt: 'Enroll new hire Maria Garcia in Ping ID for multi-factor authentication.' },
+        { label: 'Onboarding ticket',        prompt: 'Create an onboarding Zendesk ticket for new hire David Chen starting in the Finance department.' }
+      ],
+      sendRequest: async function(messages, model, config) {
+        const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+        const url = config.url;
+        const body = {
+          jsonrpc: '2.0',
+          id: crypto.randomUUID(),
+          method: 'SendMessage',
+          params: {
+            message: {
+              role: 'ROLE_USER',
+              parts: [{ text: lastUserMsg?.content ?? '' }],
+              messageId: crypto.randomUUID()
+            },
+            metadata: {}
+          }
+        };
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'a2a-version':   '1.0',
+            'client_id':     config.client_id     || '',
+            'client_secret': config.client_secret || ''
+          },
+          body: JSON.stringify(body)
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.error?.message) return { ok: false, text: data.error.message };
+          const text = data?.result?.task?.status?.message?.parts?.[0]?.text ?? '(empty response)';
+          return { ok: true, text };
+        } else if (res.status === 403) {
+          let msg = 'Access denied (403)';
+          try { const d = await res.json(); msg = d?.error?.message ?? msg; } catch {}
+          return { ok: false, text: msg };
+        } else {
+          return { ok: false, text: `HTTP error ${res.status}: ${res.statusText}` };
+        }
+      }
     }
   };
 
