@@ -736,7 +736,7 @@
     </div>
   </div>
   <div class="header-right">
-    <div class="active-demo-chip" id="active-demo-chip" title="Active demo – click to switch">
+    <div class="active-demo-chip" id="active-demo-chip" title="Active demo – click to configure">
       <span class="chip-dot"></span>
       <span class="chip-label" id="active-demo-chip-label"></span>
     </div>
@@ -1283,7 +1283,7 @@
   document.getElementById('open-demos-btn').addEventListener('click', openDemosModal);
   document.getElementById('demos-modal-close').addEventListener('click', closeDemosModal);
   document.getElementById('open-demos-cta').addEventListener('click', openDemosModal);
-  activeDemoChip.addEventListener('click', openDemosModal);
+  activeDemoChip.addEventListener('click', () => { if (activeDemo) openConfigModal(activeDemo); });
   demosOverlay.addEventListener('click', e => { if (e.target === demosOverlay) closeDemosModal(); });
 
   document.getElementById('demos-export-btn').addEventListener('click', exportDemosConfig);
