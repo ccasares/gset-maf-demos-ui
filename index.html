@@ -515,6 +515,13 @@
 
     .demo-tile-desc { font-size: 0.84rem; color: var(--gray-600); line-height: 1.55; flex: 1; }
 
+    .demo-guide-link {
+      font-size: 0.72rem; color: var(--ms-blue); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 3px; margin-top: 2px;
+      opacity: 0.85;
+    }
+    .demo-guide-link:hover { text-decoration: underline; opacity: 1; }
+
     .demo-tile-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
 
     .tile-select-hint { font-size: 0.75rem; color: var(--gray-400); }
@@ -828,6 +835,7 @@
       id: 'agent-kill-switch',
       title: 'Agent Kill Switch',
       description: 'Demonstrates how the Agent Network Gateway filters dangerous messages: PII data exfiltration, privilege escalation, and jailbreak attacks.',
+      guideUrl: 'https://www.solutionswork.space/content/post/kA0Ka000001Z938KAC/mulesoft-model-proxy-kill-switch-one-click-demo',
       lsKeys: { anypoint_username: 'ms_aks_anypoint_username', anypoint_password: 'ms_aks_anypoint_password', url: 'ms_aks_api_url', token: 'ms_aks_token' },
       defaultConfig: { anypoint_username: '', anypoint_password: '', url: 'https://agent-network-gw-v4o641.rajrd4-1.usa-e1.cloudhub.io/model-proxy-demo/chat/completions', token: '' },
       configFields: [
@@ -876,6 +884,7 @@
       id: 'semantic-routing',
       title: 'Semantic Routing',
       description: 'Shows how the Agent Network Gateway automatically routes each message to the most suitable AI model based on the semantic content of the request.',
+      guideUrl: 'https://www.solutionswork.space/content/post/kA0Ka000001UGFKKA4/semantic-routing-demo-one-click-demo',
       lsKeys: { anypoint_username: 'ms_sr_anypoint_username', anypoint_password: 'ms_sr_anypoint_password', url: 'ms_sr_api_url', client_id: 'ms_sr_client_id', client_secret: 'ms_sr_client_secret' },
       defaultConfig: { anypoint_username: '', anypoint_password: '', url: '', client_id: '', client_secret: '' },
       configFields: [
@@ -955,6 +964,7 @@
       id: 'model-wallets',
       title: 'Model Wallets',
       description: 'Demonstrates AI model wallet management: dynamic provider and model selection with quota and cost control per user or group.',
+      guideUrl: 'https://www.solutionswork.space/content/post/kA0Ka000001UGAJKA4/model-wallets-one-click-demo',
       lsKeys: { anypoint_username: 'ms_mw_anypoint_username', anypoint_password: 'ms_mw_anypoint_password', url: 'ms_mw_api_url', token: 'ms_mw_token' },
       defaultConfig: {
         anypoint_username: '',
@@ -1013,6 +1023,7 @@
       id: 'it-help-investigation',
       title: 'IT Help Investigation',
       description: 'Introduces the IT Help Investigation Broker V2, an example agent network to triage, investigate, and resolve support tickets.',
+      guideUrl: 'https://www.solutionswork.space/content/post/kA0Ka000001UFdPKAW/agent-fabric-it-help-investigation-one-click-demo',
       lsKeys: { anypoint_username: 'ms_it_anypoint_username', anypoint_password: 'ms_it_anypoint_password', url: 'ms_it_api_url', client_id: 'ms_it_client_id', client_secret: 'ms_it_client_secret' },
       defaultConfig: { anypoint_username: '', anypoint_password: '', url: '', client_id: '', client_secret: '' },
       configFields: [
@@ -1078,6 +1089,7 @@
       id: 'employee-onboarding',
       title: 'Employee Onboarding',
       description: 'Showcases a multi-agent onboarding broker that automates the full employee onboarding lifecycle by coordinating Workday, Badging, Salesforce, Ping ID (IT), and Zendesk.',
+      guideUrl: 'https://www.solutionswork.space/content/post/kA0Ka000001nVw3KAE/agent-fabric-employee-onboarding-one-click-demo',
       lsKeys: { anypoint_username: 'ms_eo_anypoint_username', anypoint_password: 'ms_eo_anypoint_password', url: 'ms_eo_api_url', client_id: 'ms_eo_client_id', client_secret: 'ms_eo_client_secret' },
       defaultConfig: { anypoint_username: '', anypoint_password: '', url: '', client_id: '', client_secret: '' },
       configFields: [
@@ -1236,7 +1248,13 @@
       tile.className = `demo-tile${isActive ? ' active' : ''}`;
       tile.innerHTML = `
         <div class="demo-tile-header">
-          <button class="demo-tile-title-btn" data-action="select" data-demo-id="${demo.id}">${demo.title}</button>
+          <div>
+            <button class="demo-tile-title-btn" data-action="select" data-demo-id="${demo.id}">${demo.title}</button>
+            ${demo.guideUrl ? `<a class="demo-guide-link" href="${demo.guideUrl}" target="_blank" rel="noopener noreferrer">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Demo Guide
+            </a>` : ''}
+          </div>
           <span class="active-badge">Active</span>
         </div>
         <p class="demo-tile-desc">${demo.description}</p>
