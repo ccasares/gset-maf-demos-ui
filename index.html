@@ -901,15 +901,10 @@
       presets: [
         { label: 'Coding',            prompt: 'What are the pros and cons of Rust?' },
         { label: 'Finance',           prompt: 'What are stock options?' },
-        { label: 'General',           prompt: 'Can you suggest a fun name for my new cat?' },
         { label: 'Devops',            prompt: 'How do I write a multi-stage Dockerfile to produce a smaller production image?' },
-        { label: 'Data-Science',      prompt: 'Explain the difference between L1 and L2 regularization in linear models.' },
-        { label: 'Cybersecurity',     prompt: 'How should I securely store user passwords in a database?' },
         { label: 'Databases',         prompt: 'When should I use a relational database versus a NoSQL document store?' },
         { label: 'Legal-compliance',  prompt: 'What is the difference between a trademark, a copyright, and a patent?' },
-        { label: 'Travel',            prompt: 'Do I need a visa to travel to Brazil on a US passport, and for how long can I stay?' },
-        { label: 'Healthcare',        prompt: 'Can you explain how vaccines help the immune system build protection?' },
-        { label: 'Education',         prompt: 'How can I help a student who is struggling with reading comprehension?' }
+        { label: 'Travel',            prompt: 'Do I need a visa to travel to Brazil on a US passport, and for how long can I stay?' }
       ],
       sendRequest: async function(messages, model, config) {
         const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
